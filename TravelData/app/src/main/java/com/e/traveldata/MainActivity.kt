@@ -97,13 +97,12 @@ class VacationRecyclerAdapter(val vacations: List<Vacation>) :
         //val resolver = this@MainActivity.getContentResolver()
         //val bitmap = MediaStore.Images.Media.getBitmap(resolver, Uri.parse(vacation.image))
         //imageView.setImageURI(Bitmap.(vacation.image))
-        fun getImageFromBytes(image: ByteArray): Bitmap {
-            return BitmapFactory.decodeByteArray(image, 0, image.size);
+//        fun getImageFromBytes(image: ByteArray): Bitmap {
+//            return BitmapFactory.decodeByteArray(image, 0, image.size);
+//        }
+        if (vacation.image != null) {
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(vacation.image, 0, vacation.image.size))
         }
-
-        if (vacation.image != null)
-            imageView.setImageBitmap(getImageFromBytes(vacation.image))
-
 
 
 
