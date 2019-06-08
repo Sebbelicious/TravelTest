@@ -119,7 +119,7 @@ class EditVacationPicture : AppCompatActivity() {
 
                     Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
                     Log.d("uri noget", contentURI.toString())
-                    //imageview!!.setImageBitmap(bitmap)
+                    imageview!!.setImageBitmap(bitmap)
 
                 }
                 catch (e: IOException) {
@@ -133,13 +133,12 @@ class EditVacationPicture : AppCompatActivity() {
         else if (requestCode == CAMERA)
         {
             val id = intent.extras.getInt("id")
-            //val id = 1
 
 
             Toast.makeText(this@EditVacationPicture, "The id is in onActivityForResult: $id", Toast.LENGTH_LONG).show()
             val thumbnail = data!!.extras!!.get("data") as Bitmap
             saveImage(thumbnail, id)
-            //imageview!!.setImageBitmap(thumbnail)
+            imageview!!.setImageBitmap(thumbnail)
             Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
         }
     }
