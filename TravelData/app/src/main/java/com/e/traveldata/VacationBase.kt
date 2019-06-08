@@ -7,7 +7,7 @@ import org.jetbrains.anko.db.*
 import java.lang.IllegalArgumentException
 
 class VacationBaseOpenHelper(context: Context = App.instance) ://
-    ManagedSQLiteOpenHelper(context, "Trippie", null, 5) {
+    ManagedSQLiteOpenHelper(context, "Trippie", null, 6) {
     companion object {
         val instance by lazy { VacationBaseOpenHelper() }
 
@@ -72,15 +72,15 @@ class VacationBaseOpenHelper(context: Context = App.instance) ://
             "Vacation",
             "id" to 1,
             "country" to "USA",
-            "year" to "2019"
-            //"image" to ByteArray(0)
+            "year" to "2019",
+            "image" to ByteArray(0)
         )
         db.insert(
             "Vacation",
             "id" to 2,
             "country" to "Brasilien",
-            "year" to "2019"
-            //"image" to ByteArray(0)
+            "year" to "2019",
+            "image" to ByteArray(0)
         )
 
     }

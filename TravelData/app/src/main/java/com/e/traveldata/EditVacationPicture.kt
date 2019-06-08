@@ -34,6 +34,7 @@ class EditVacationPicture : AppCompatActivity() {
     private var imageview: ImageView? = null
     private val GALLERY = 1
     private val CAMERA = 2
+    //private var vacationId: Int? = null
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,29 +112,14 @@ class EditVacationPicture : AppCompatActivity() {
                 try
                 {
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, contentURI)
-
+                    val id = intent.extras.getInt("id")
                     //val path = saveImage(bitmap)
 
-                    var byteArray = getBytesFromBitmap(bitmap)
-
-                    Toast.makeText(this@EditVacationPicture, "The contentURI is in onActivityForResult: ${bitmap.toString()}", Toast.LENGTH_LONG).show()
-                    val id = intent.extras.getInt("id")
-                    //Toast.makeText(this@EditVacationPicture, "The id is in onActivityForResult: $id", Toast.LENGTH_LONG).show()
-                    //Toast.makeText(this@EditVacationPicture, "Thepath is in onActivityForResult: $path", Toast.LENGTH_LONG).show()
-
-
-
-
-                    database.use {
-                        update(Vacation.TABLE_NAME, Vacation.IMAGE to byteArray)
-                            .whereArgs("id = {id}", "id" to id)
-                            .exec()
-                    }
-
+                    saveImage(bitmap, id)
 
                     Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
                     Log.d("uri noget", contentURI.toString())
-                    imageview!!.setImageBitmap(bitmap)
+                    //imageview!!.setImageBitmap(bitmap)
 
                 }
                 catch (e: IOException) {
@@ -146,50 +132,73 @@ class EditVacationPicture : AppCompatActivity() {
         }
         else if (requestCode == CAMERA)
         {
-            val vacationId = intent.extras.getInt("id")
+            val id = intent.extras.getInt("id")
+            //val id = 1
 
-            Toast.makeText(this@EditVacationPicture, "The id is in onActivityForResult: $vacationId", Toast.LENGTH_LONG).show()
+
+            Toast.makeText(this@EditVacationPicture, "The id is in onActivityForResult: $id", Toast.LENGTH_LONG).show()
             val thumbnail = data!!.extras!!.get("data") as Bitmap
-            imageview!!.setImageBitmap(thumbnail)
-            saveImage(thumbnail)
+            saveImage(thumbnail, id)
+            //imageview!!.setImageBitmap(thumbnail)
             Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun saveImage(myBitmap: Bitmap):String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
-        val wallpaperDirectory = File(
-            (Environment.getExternalStorageDirectory()).toString() + IMAGE_DIRECTORY)
-        // have the object build the directory structure, if needed.
-        Log.d("fee",wallpaperDirectory.toString())
-        if (!wallpaperDirectory.exists())
-        {
+    fun saveImage(myBitmap: Bitmap, id: Int):String {
 
-            wallpaperDirectory.mkdirs()
+        var byteArray = getBytesFromBitmap(myBitmap)
+
+        Toast.makeText(this@EditVacationPicture, "The bitmap is in onActivityForResult: ${myBitmap.toString()}", Toast.LENGTH_LONG).show()
+
+        //Toast.makeText(this@EditVacationPicture, "The id is in onActivityForResult: $id", Toast.LENGTH_LONG).show()
+        //Toast.makeText(this@EditVacationPicture, "Thepath is in onActivityForResult: $path", Toast.LENGTH_LONG).show()
+
+
+        database.use {
+            update(Vacation.TABLE_NAME, Vacation.IMAGE to byteArray)
+                .whereArgs("id = {id}", "id" to id)
+                .exec()
         }
 
-        try
-        {
-            Log.d("heel",wallpaperDirectory.toString())
-            val f = File(wallpaperDirectory, ((Calendar.getInstance()
-                .getTimeInMillis()).toString() + ".jpg"))
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            MediaScannerConnection.scanFile(this,
-                arrayOf(f.getPath()),
-                arrayOf("image/jpeg"), null)
-            fo.close()
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
 
-            return f.getAbsolutePath()
+        Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
+        Log.d("uri noget", myBitmap.toString())
+        //imageview!!.setImageBitmap(myBitmap)
 
-        }
-        catch (e1: IOException) {
-            e1.printStackTrace()
-        }
 
+//        val bytes = ByteArrayOutputStream()
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+//        val wallpaperDirectory = File(
+//            (Environment.getExternalStorageDirectory()).toString() + IMAGE_DIRECTORY)
+//        // have the object build the directory structure, if needed.
+//        Log.d("fee",wallpaperDirectory.toString())
+//        if (!wallpaperDirectory.exists())
+//        {
+//
+//            wallpaperDirectory.mkdirs()
+//        }
+//
+//        try
+//        {
+//            Log.d("heel",wallpaperDirectory.toString())
+//            val f = File(wallpaperDirectory, ((Calendar.getInstance()
+//                .getTimeInMillis()).toString() + ".jpg"))
+//            f.createNewFile()
+//            val fo = FileOutputStream(f)
+//            fo.write(bytes.toByteArray())
+//            MediaScannerConnection.scanFile(this,
+//                arrayOf(f.getPath()),
+//                arrayOf("image/jpeg"), null)
+//            fo.close()
+//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
+//
+//            return f.getAbsolutePath()
+//
+//        }
+//        catch (e1: IOException) {
+//            e1.printStackTrace()
+//        }
+//
         return ""
     }
 
